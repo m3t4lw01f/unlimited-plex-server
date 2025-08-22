@@ -29,7 +29,7 @@ services:
       - TZ=${TIMEZONE}
       - ORIGIN=${RIVEN_ORIGIN} #Remove if behind reverse proxy
     ports:
-      - 3000:3000
+      - ${RIVEN_PORT}:3000
     volumes:
       - ./config-riven-frontend:/riven/config
     depends_on:
@@ -88,9 +88,7 @@ services:
     volumes:
       - ./config-database:/var/lib/postgresql/data/pgdata
     healthcheck:
-      test:
-        - CMD-SHELL
-        - pg_isready -U $$PG_USER
+      test: ["CMD-SHELL", "pg_isready -U $$PG_USER"]
       interval: 10s
       timeout: 5s
       retries: 5
