@@ -18,24 +18,24 @@ A Docker Compose configuration for an unlimited plex server with decent defaults
 - [Overseerr](https://overseerr.dev/) - A powerful request system
 - [Plex](https://plex.tv) - a full featured media server
 - Postgres - A relational database server
+- FUSE - Filesystem in User Space
 
 ## Step one
 - Clone this repo somewhere handy
 
 ## Required configuration
-- This uses FUSE, so install it from your package manager (On Ubuntu: `sudo apt install fuse`, on other distros [Google it](https://www.google.com/search?q=how+to+install+fuse+on+linux))
+- rclone uses FUSE to do its thing, so install it from your package manager
+  - On Ubuntu: `sudo apt install fuse`
+  - other distros [Google it](https://www.google.com/search?q=how+to+install+fuse+on+linux))
 - Find your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) and set `TIMEZONE` in `.env`
 - Get your local user ID with ``id `whoami` ``
   - This will output something like `uid=1000(username) gid=1000(groupname)`
   - Set `USER_ID` and `GROUP_ID` in `.env` to the numbers seen in the output (in this case `1000` for both)
-- Get your [real-debrid API private token](https://real-debrid.com/devices) and set `REAL_DEBRID` in `.env` and `token: ` at the top of `zurg-config.yml`
-- Get a [Plex claim token](https://account.plex.tv/claim) and set `PLEX_CLAIM_TOKEN` in `.env`
-  - This token is only good for a few minutes, so save this step for right before you `docker compose up -d`
-
-## Required folders
-Instead of `1000:1000` use the IDs obtained above.
 - create a folder for rclone to mount Zurg's webdav: `sudo mkdir /mnt/zurg` and then `sudo chown 1000:1000 /mnt/zurg`
 - create a folder for the library: `sudo mkdir /mnt/library` and `sudo chown 1000:1000 /mnt/library`
+- Get your [real-debrid API private token](https://real-debrid.com/devices) and set `REAL_DEBRID` in `.env` and `token: ` at the top of `zurg-config.yml`
+- Get a [Plex claim token](https://account.plex.tv/claim) and set `PLEX_CLAIM_TOKEN` in `.env`
+  - This token is only good for a few minutes, so be quick with the next step
 
 ## Get things running
 In the folder you cloned the repo to run `docker compose up -d`
@@ -46,6 +46,8 @@ The Plex server should automatically appear in your account in their [web app](h
 - TV Shows at `/mnt/library/shows`
 - `#OPTIONAL` Anime Movies at `/mnt/library/anime_movies`
 - `#OPTIONAL` Anime TV at `/mnt/library/anime_shows`
+- In Plex settings for the server, on the transcode menu item, set 'Transcoder temporary directory' to `/transcode`
+- If you have plex pass, enable hardware acceleration
 - Special notes:
   - Plex thumbnail generation, chapter image generation, ad markers, intro markers, credit markers and voice activity can cause Plex to pull a LOT of data from real-debrid. It is recommended to not enable these if you are going to add a lot of content all at once.
 
