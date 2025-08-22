@@ -77,7 +77,7 @@ In your browser head over to [Riven](http://localhost:3000) and head to the sett
   - Hit save
 
 ## Make a request
-Back in [Overseerr](http://localhost:5055), search for something and when your results come back, click the little "Request" button on the thumbnail. It will use the webhook to send the request to Riven, Riven will use Zilean as the source and if it finds an available release, it will add it to your real-debrid account. Once added to your real-debrid account, it will show up in the rclone webdav mount at `/mnt/zurg/__all__`, Riven will symlink that to `/mnt/library` in the appropriate subfolder and Plex will pick it up and scan it into your library.
+Back in [Overseerr](http://localhost:5055), search for something and when your results come back, click the little "Request" button on the thumbnail. It will use the webhook to send the request to Riven, Riven will use Zilean or TorrentIO as the source and if it finds an available release, it will add it to your real-debrid account. Once added to your real-debrid account, it will show up in the rclone webdav mount at `/mnt/zurg/__all__`, Riven will symlink that to `/mnt/library` in the appropriate subfolder and Plex will pick it up and scan it into your library.
 
 ## Troubleshooting
 ### Zilean
