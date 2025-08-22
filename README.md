@@ -28,7 +28,7 @@ A Docker Compose configuration for an unlimited plex server with decent defaults
   - On Ubuntu: `sudo apt install fuse`
   - other distros [Google it](https://www.google.com/search?q=how+to+install+fuse+on+linux)
 - Find your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) and set `TIMEZONE` in `.env`
-- Get your local user ID with ``id `whoami` ``
+- Get your local user ID with `id`
   - This will output something like `uid=1000(username) gid=1000(groupname)`
   - Set `USER_ID` and `GROUP_ID` in `.env` to the numbers seen in the output (in this case `1000` for both)
   - Use these IDs in the `chown` command in the next step
