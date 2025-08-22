@@ -1,5 +1,5 @@
 services:
-  overseerr:
+  ups-overseerr:
     image: sctx/overseerr:latest
     hostname: overseerr
     container_name: overseerr
@@ -16,10 +16,10 @@ services:
     volumes:
       - ./config-overseerr:/app/config
   
-  riven-frontend:
+  ups-riven-frontend:
     image: spoked/riven-frontend:latest
-    hostname: riven-frontend
-    container_name: riven-frontend
+    hostname: ups-riven-frontend
+    container_name: ups-riven-frontend
     restart: unless-stopped
     environment:
       - UID=${USER_ID}
@@ -33,14 +33,14 @@ services:
     volumes:
       - ./config-riven-frontend:/riven/config
     depends_on:
-      riven-backend:
+      ups-riven-backend:
         condition: service_healthy
     tty: true
     
-  riven-backend:
+  ups-riven-backend:
     image: spoked/riven:latest
-    hostname: riven-backend
-    container_name: riven-backend
+    hostname: ups-riven-backend
+    container_name: ups-riven-backend
     restart: unless-stopped
     environment:
       - UID=${USER_ID}
@@ -61,11 +61,11 @@ services:
       - ./config-riven-backend:/riven/data
       - /mnt:/mnt
     depends_on:
-      plex:
+      ups-plex:
         condition: service_started
       ups-database:
         condition: service_healthy
-      zilean:
+      ups-zilean:
         condition: service_healthy
     healthcheck:
       test: 'curl -s http://localhost:8080 >/dev/null || exit 1'
@@ -93,10 +93,10 @@ services:
       timeout: 5s
       retries: 5
 
-  zurg:
+  ups-zurg:
     image: ghcr.io/debridmediamanager/zurg-testing:latest
-    hostname: zurg
-    container_name: zurg
+    hostname: ups-zurg
+    container_name: ups-zurg
     restart: unless-stopped
     environment:
       - UID=${USER_ID}
@@ -115,10 +115,10 @@ services:
       start_period: 5s
       timeout: 5s
     
-  rclone:
+  ups-rclone:
     image: rclone/rclone:latest
-    hostname: rclone
-    container_name: rclone
+    hostname: ups-rclone
+    container_name: ups-rclone
     restart: unless-stopped
     environment:
       - UID=${USER_ID}
@@ -136,7 +136,7 @@ services:
     devices:
       - /dev/fuse:/dev/fuse:rwm
     depends_on:
-      zurg:
+      ups-zurg:
         condition: service_healthy
         restart: true
     healthcheck:
@@ -147,7 +147,7 @@ services:
       timeout: 5s
     command: "mount zurg: /data --allow-other --allow-non-empty --dir-cache-time 10s --vfs-read-chunk-size 16M --vfs-read-chunk-size-limit 256M --vfs-cache-mode writes --uid $$USER_ID --gid $$GROUP_ID --log-level NOTICE"
 
-  zilean:
+  ups-zilean:
     image: ipromknight/zilean:latest
     hostname: zilean
     container_name: zilean
@@ -171,10 +171,10 @@ services:
       interval: 30s
       retries: 10
 
-  plex:
+  ups-plex:
     image: plexinc/pms-docker:${PLEX_TYPE}
-    hostname: plex
-    container_name: plex
+    hostname: ups-plex
+    container_name: ups-plex
     restart: unless-stopped
     environment:
       - UID=${USER_ID}
@@ -194,7 +194,7 @@ services:
     devices:
       - /dev/dri:/dev/dri #For hardware acceleration
     depends_on:
-      rclone:
+      ups-rclone:
         condition: service_healthy
         restart: true
 
