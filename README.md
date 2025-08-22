@@ -26,7 +26,7 @@ A Docker Compose configuration for an unlimited plex server with decent defaults
 ## Required configuration
 - rclone uses FUSE to do its thing, so install it from your package manager
   - On Ubuntu: `sudo apt install fuse`
-  - other distros [Google it](https://www.google.com/search?q=how+to+install+fuse+on+linux))
+  - other distros [Google it](https://www.google.com/search?q=how+to+install+fuse+on+linux)
 - Find your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) and set `TIMEZONE` in `.env`
 - Get your local user ID with ``id `whoami` ``
   - This will output something like `uid=1000(username) gid=1000(groupname)`
