@@ -176,7 +176,7 @@ services:
       retries: 10
 
   plex:
-    image: plexinc/pms-docker:public #or :plexpass if you have a Plex Pass.
+    image: plexinc/pms-docker:${PLEX_TYPE}
     hostname: plex
     container_name: plex
     restart: unless-stopped
