@@ -145,7 +145,7 @@ services:
       retries: 3
       start_period: 5s
       timeout: 5s
-    command: "mount zurg: /data --allow-other --allow-non-empty --dir-cache-time 10s --vfs-read-chunk-size 16M --vfs-read-chunk-size-limit 256M --vfs-cache-mode writes --uid $$USER_ID --gid $$GROUP_ID --log-level NOTICE"
+    command: "mount zurg: /data --allow-other --allow-non-empty --dir-cache-time 10s --vfs-read-chunk-size 16M --vfs-read-chunk-size-limit 256M --vfs-cache-mode writes --uid ${USER_ID} --gid ${GROUP_ID} --log-level NOTICE"
 
   ups-zilean:
     image: ipromknight/zilean:latest
