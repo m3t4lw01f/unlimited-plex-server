@@ -67,11 +67,12 @@ In your browser head over to [Overseerr](http://localhost:5055) and head to the 
 
 ## Configure Riven
 In your browser head over to [Riven](http://localhost:3000) and head to the settings
-- On the General tab, click the checkbox next to Separate Anime Dirs if you created the `#OPTIONAL` Plex libraries for anime above
+- On the General tab, click the checkbox next to Separate Anime Dirs if you created the `#OPTIONAL` Plex libraries for anime above and hit save
 - Navigate to the Content tab and
   - Click the checkbox next to Overseerr
   - For the URL enter `http://overseerr:5055` and paste the API Key obtained above into the `Overseerr API Key` box
   - Check the checkbox next to `Overseerr Use Webhook`
+  - Hit save
 
 ## Make a request
 Back in [Overseerr](http://localhost:5055), search for something and when your results come back, click the little "Request" button on the thumbnail. It will use the webhook to send the request to Riven, Riven will use Zilean as the source and if it finds an available release, it will add it to your real-debrid account. Once added to your real-debrid account, it will show up in the rclone webdav mount at `/mnt/zurg/__all__`, Riven will symlink that to `/mnt/library` in the appropriate subfolder and Plex will pick it up and scan it into your library.
