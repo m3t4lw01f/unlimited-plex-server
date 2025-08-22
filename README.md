@@ -55,18 +55,20 @@ The Plex server should automatically appear in your account in their [web app](h
   - Plex thumbnail generation, chapter image generation, ad markers, intro markers, credit markers and voice activity can cause Plex to pull a LOT of data from real-debrid. It is recommended to not enable these if you are going to add a lot of content all at once.
 
 ## Configure Overseerr
-On the file system, go to `./config-riven-backend` and open `settings.json` and find `"api_key": "STRING_OF_CHARACTERS",` and copy the string of characters between the quotation marks\
+On the file system, open `./config-riven-backend/settings.json` and find `"api_key":`. It'll be a long string of characters in quotation marks. This is your `RIVEN_API_KEY` used below.\
 In your browser head over to [Overseerr](http://localhost:5055) and head to the settings
 - Connect to your Plex account on the "Plex" tab
 - Navigate to the Notifications tab and select `webhooks`
   - Set the Webhook URL to `http://riven-backend:8080/api/v1/webhook/overseerr`
-  - Set Authorization Header to `Bearer PASTE_STRING_OF_CHARACTERS_FROM_ABOVE`
+  - Set Authorization Header to `Bearer RIVEN_API_KEY`
   - Check the boxes for `Request Automatically Approved` and `Request Approved`
   - Scroll down and hit `Test`. If successfull, hit `Save Changes`.
 - Now, back on the General tab in the settings, click the copy button next to `API Key`
 
 ## Configure Riven
 In your browser head over to [Riven](http://localhost:3000) and head to the settings
+- Enter `http://ups-riven-backend:8080` for the Backend URL
+- Enter the same `RIVEN_API_KEY` as above in the API Key box and hit save and connect.
 - On the General tab, click the checkbox next to Separate Anime Dirs if you created the `#OPTIONAL` Plex libraries for anime above and hit save
 - Navigate to the Content tab and
   - Click the checkbox next to Overseerr
