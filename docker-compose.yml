@@ -49,8 +49,8 @@ services:
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
       - RIVEN_FORCE_ENV=true
-      - RIVEN_SYMLINK_RCLONE_PATH=/mnt/zurg/__all__
-      - RIVEN_SYMLINK_LIBRARY_PATH=/mnt/library
+      - RIVEN_SYMLINK_RCLONE_PATH=${RCLONE_MNT}/__all__
+      - RIVEN_SYMLINK_LIBRARY_PATH=${LIBRARY_MNT}
       - RIVEN_DATABASE_HOST=postgresql+psycopg2://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${RIVEN_DB}
       - RIVEN_DOWNLOADERS_REAL_DEBRID_ENABLED=true
       - RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY=${REAL_DEBRID}
@@ -131,7 +131,7 @@ services:
       - PGID=${GROUP_ID}
       - TZ=${TIMEZONE}
     volumes:
-      - /mnt/zurg:/data:rshared
+      - ${RCLONE_MNT}:/data:rshared
       - ./rclone.conf:/config/rclone/rclone.conf
     cap_add:
       - SYS_ADMIN
