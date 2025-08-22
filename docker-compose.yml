@@ -5,12 +5,12 @@ services:
     container_name: ups-overseerr
     restart: unless-stopped
     environment:
-      - UID=${USER_ID}
-      - GID=${GROUP_ID}
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
-      - PORT=${OVERSEERR_PORT}
+      UID: ${USER_ID}
+      GID: ${GROUP_ID}
+      PUID: ${USER_ID}
+      PGID: ${GROUP_ID}
+      TZ: ${TIMEZONE}
+      PORT: ${OVERSEERR_PORT}
     ports:
       - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
     volumes:
@@ -22,12 +22,12 @@ services:
     container_name: ups-riven-frontend
     restart: unless-stopped
     environment:
-      - UID=${USER_ID}
-      - GID=${GROUP_ID}
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
-      - ORIGIN=${RIVEN_ORIGIN} #Remove if behind reverse proxy
+      UID: ${USER_ID}
+      GID: ${GROUP_ID}
+      PUID: ${USER_ID}
+      PGID: ${GROUP_ID}
+      TZ: ${TIMEZONE}
+      ORIGIN: ${RIVEN_ORIGIN} #Remove if behind reverse proxy
     ports:
       - ${RIVEN_PORT}:3000
     volumes:
@@ -43,20 +43,20 @@ services:
     container_name: ups-riven-backend
     restart: unless-stopped
     environment:
-      - UID=${USER_ID}
-      - GID=${GROUP_ID}
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
-      - RIVEN_FORCE_ENV=true
-      - RIVEN_SYMLINK_RCLONE_PATH=${RCLONE_MNT}/__all__
-      - RIVEN_SYMLINK_LIBRARY_PATH=${LIBRARY_MNT}
-      - RIVEN_DATABASE_HOST=postgresql+psycopg2://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${RIVEN_DB}
-      - RIVEN_DOWNLOADERS_REAL_DEBRID_ENABLED=true
-      - RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY=${REAL_DEBRID}
-      - RIVEN_SCRAPING_TORRENTIO_ENABLED=true
-      - RIVEN_SCRAPING_ZILEAN_ENABLED=true
-      - RIVEN_SCRAPING_ZILEAN_URL=http://zilean:8181
+      UID: ${USER_ID}
+      GID: ${GROUP_ID}
+      PUID: ${USER_ID}
+      PGID: ${GROUP_ID}
+      TZ: ${TIMEZONE}
+      RIVEN_FORCE_ENV: true
+      RIVEN_SYMLINK_RCLONE_PATH: ${RCLONE_MNT}/__all__
+      RIVEN_SYMLINK_LIBRARY_PATH: ${LIBRARY_MNT}
+      RIVEN_DATABASE_HOST: postgresql+psycopg2://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${RIVEN_DB}
+      RIVEN_DOWNLOADERS_REAL_DEBRID_ENABLED: true
+      RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY: ${REAL_DEBRID}
+      RIVEN_SCRAPING_TORRENTIO_ENABLED: true
+      RIVEN_SCRAPING_ZILEAN_ENABLED: true
+      RIVEN_SCRAPING_ZILEAN_URL: http://zilean:8181
     volumes:
       - ./config-riven-backend:/riven/data
       - /mnt:/mnt
@@ -88,7 +88,7 @@ services:
     volumes:
       - ./config-database:/var/lib/postgresql/data/pgdata
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$PG_USER"]
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -99,12 +99,12 @@ services:
     container_name: ups-zurg
     restart: unless-stopped
     environment:
-      - UID=${USER_ID}
-      - GID=${GROUP_ID}
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
-      - LOG_LEVEL=INFO
+      UID: ${USER_ID}
+      GID: ${GROUP_ID}
+      PUID: ${USER_ID}
+      PGID: ${GROUP_ID}
+      TZ: ${TIMEZONE}
+      LOG_LEVEL: INFO
     volumes:
       - ./zurg-config.yml:/app/config.yml
       - ./config-zurg:/app/data
@@ -121,11 +121,11 @@ services:
     container_name: ups-rclone
     restart: unless-stopped
     environment:
-      - UID=${USER_ID}
-      - GID=${GROUP_ID}
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
+      UID: ${USER_ID}
+      GID: ${GROUP_ID}
+      PUID: ${USER_ID}
+      PGID: ${GROUP_ID}
+      TZ: ${TIMEZONE}
     volumes:
       - ${RCLONE_MNT}:/data:rshared
       - ./rclone.conf:/config/rclone/rclone.conf
@@ -153,12 +153,12 @@ services:
     container_name: zilean
     restart: unless-stopped
     environment:
-      - UID=${USER_ID}
-      - GID=${GROUP_ID}
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
-      - Zilean__Database__ConnectionString = Host=${PG_HOST};Port=5432;Database=${ZILEAN_DB};Username=${PG_USER};Password=${PG_PASSWORD}
+      UID: ${USER_ID}
+      GID: ${GROUP_ID}
+      PUID: ${USER_ID}
+      PGID: ${GROUP_ID}
+      TZ: ${TIMEZONE}
+      Zilean__Database__ConnectionString: Host=${PG_HOST};Port=5432;Database=${ZILEAN_DB};Username=${PG_USER};Password=${PG_PASSWORD}
     volumes:
       - ./config-zilean:/app/data
       - ./config-zilean-tmp:/tmp
@@ -177,14 +177,14 @@ services:
     container_name: ups-plex
     restart: unless-stopped
     environment:
-      - UID=${USER_ID}
-      - GID=${GROUP_ID}
-      - PUID=${USER_ID}
-      - PGID=${GROUP_ID}
-      - TZ=${TIMEZONE}
-      - PLEX_CLAIM=${PLEX_CLAIM_TOKEN}
-      - PLEX_UID=${USER_ID}
-      - PLEX_GID=${GROUP_ID}
+      UID: ${USER_ID}
+      GID: ${GROUP_ID}
+      PUID: ${USER_ID}
+      PGID: ${GROUP_ID}
+      TZ: ${TIMEZONE}
+      PLEX_CLAIM: ${PLEX_CLAIM_TOKEN}
+      PLEX_UID: ${USER_ID}
+      PLEX_GID: ${GROUP_ID}
     ports:
       - 32400:32400/tcp
     volumes:
