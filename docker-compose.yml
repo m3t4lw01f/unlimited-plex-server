@@ -1,8 +1,8 @@
 services:
   ups-overseerr:
     image: sctx/overseerr:latest
-    hostname: overseerr
-    container_name: overseerr
+    hostname: ups-overseerr
+    container_name: ups-overseerr
     restart: unless-stopped
     environment:
       - UID=${USER_ID}
