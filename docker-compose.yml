@@ -1,0 +1,204 @@
+services:
+  overseerr:
+    image: sctx/overseerr:latest
+    hostname: overseerr
+    container_name: overseerr
+    restart: unless-stopped
+    environment:
+      - UID=${USER_ID}
+      - GID=${GROUP_ID}
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+      - PORT=${OVERSEERR_PORT}
+    ports:
+      - 5055:5055
+    volumes:
+      - ./config-overseerr:/app/config
+  
+  riven-frontend:
+    image: spoked/riven-frontend:latest
+    hostname: riven-frontend
+    container_name: riven-frontend
+    restart: unless-stopped
+    environment:
+      - UID=${USER_ID}
+      - GID=${GROUP_ID}
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+      - ORIGIN=${RIVEN_ORIGIN} #Remove if behind reverse proxy
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config-riven-frontend:/riven/config
+    depends_on:
+      riven-backend:
+        condition: service_healthy
+    tty: true
+    
+  riven-backend:
+    image: spoked/riven:latest
+    hostname: riven-backend
+    container_name: riven-backend
+    restart: unless-stopped
+    environment:
+      - UID=${USER_ID}
+      - GID=${GROUP_ID}
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+      - RIVEN_FORCE_ENV=true
+      - RIVEN_SYMLINK_RCLONE_PATH=/mnt/zurg/__all__
+      - RIVEN_SYMLINK_LIBRARY_PATH=/mnt/library
+      - RIVEN_DATABASE_HOST=postgresql+psycopg2://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${RIVEN_DB}
+      - RIVEN_DOWNLOADERS_REAL_DEBRID_ENABLED=true
+      - RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY=${REAL_DEBRID}
+      - RIVEN_SCRAPING_TORRENTIO_ENABLED=true
+      - RIVEN_SCRAPING_ZILEAN_ENABLED=true
+      - RIVEN_SCRAPING_ZILEAN_URL=http://zilean:8181
+    volumes:
+      - ./config-riven-backend:/riven/data
+      - /mnt:/mnt
+    depends_on:
+      plex:
+        condition: service_started
+      ups-database:
+        condition: service_healthy
+      zilean:
+        condition: service_healthy
+    healthcheck:
+      test: 'curl -s http://localhost:8080 >/dev/null || exit 1'
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    tty: true
+    
+  ups-database:
+    image: postgres:17-alpine
+    hostname: ups-database
+    container_name: ups-database
+    restart: unless_stopped
+    environment:
+      TZ: ${TIMEZONE}
+      PGDATA: ${PG_DATA}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${RIVEN_DB}
+    volumes:
+      - ./config-database:/var/lib/postgresql/data/pgdata
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zurg:
+    image: ghcr.io/debridmediamanager/zurg-testing:latest
+    hostname: zurg
+    container_name: zurg
+    restart: unless-stopped
+    environment:
+      - UID=${USER_ID}
+      - GID=${GROUP_ID}
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+      - LOG_LEVEL=INFO
+    ports:
+      - 9999:9999
+    volumes:
+      - ./zurg-config.yml:/app/config.yml
+      - ./config-zurg:/app/data
+    healthcheck:
+      test: curl -f localhost:9999/dav/version.txt || exit 1
+      interval: 10s
+      retries: 3
+      start_period: 5s
+      timeout: 5s
+    
+  rclone:
+    image: rclone/rclone:latest
+    hostname: rclone
+    container_name: rclone
+    restart: unless-stopped
+    environment:
+      - UID=${USER_ID}
+      - GID=${GROUP_ID}
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - /mnt/zurg:/data:rshared
+      - ./rclone.conf:/config/rclone/rclone.conf
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    devices:
+      - /dev/fuse:/dev/fuse:rwm
+    depends_on:
+      zurg:
+        condition: service_healthy
+        restart: true
+    healthcheck:
+      test: ["CMD-SHELL", "test -d /data/__all__"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
+      timeout: 5s
+    command: "mount zurg: /data --allow-other --allow-non-empty --dir-cache-time 10s --vfs-read-chunk-size 16M --vfs-read-chunk-size-limit 256M --vfs-cache-mode writes --uid $$USER_ID --gid $$GROUP_ID --log-level NOTICE"
+
+  zilean:
+    image: ipromknight/zilean:latest
+    hostname: zilean
+    container_name: zilean
+    restart: unless-stopped
+    environment:
+      - UID=${USER_ID}
+      - GID=${GROUP_ID}
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+      - Zilean__Database__ConnectionString = Host=${PG_HOST};Port=5432;Database=${ZILEAN_DB};Username=${PG_USER};Password=${PG_PASSWORD}
+    volumes:
+      - ./config-zilean:/app/data
+      - ./config-zilean-tmp:/tmp
+    depends_on:
+      ups-database:
+        condition: service_healthy
+    healthcheck:
+      test: curl --connect-timeout 10 --silent --show-error --fail http://localhost:8181/healthchecks/ping
+      timeout: 60s
+      interval: 30s
+      retries: 10
+
+  plex:
+    image: plexinc/pms-docker:public #or :plexpass if you have a Plex Pass.
+    hostname: plex
+    container_name: plex
+    restart: unless-stopped
+    environment:
+      - UID=${USER_ID}
+      - GID=${GROUP_ID}
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - TZ=${TIMEZONE}
+      - PLEX_CLAIM=${PLEX_CLAIM_TOKEN}
+      - PLEX_UID=${USER_ID}
+      - PLEX_GID=${GROUP_ID}
+    ports:
+      - 32400:32400/tcp
+    volumes:
+      - ./config-plex:/config
+      - /dev/shm:/transcode
+      - /mnt:/mnt:ro
+    devices:
+      - /dev/dri:/dev/dri #For hardware acceleration
+    depends_on:
+      rclone:
+        condition: service_healthy
+        restart: true
+

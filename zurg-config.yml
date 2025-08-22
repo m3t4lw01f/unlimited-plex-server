@@ -1,0 +1,17 @@
+zurg: v1
+#Token for real-debrid, same as the one in .env
+token: xxxxxxxxx
+
+api_rate_limit_per_minute: 60
+torrents_rate_limit_per_minute: 25
+concurrent_workers: 32
+check_for_changes_every_secs: 10
+repair_every_mins: 60
+ignore_renames: true
+retain_rd_torrent_name: true
+retain_folder_name_extension: true
+enable_repair: true
+auto_delete_rar_torrents: false
+get_torrents_count: 5000
+serve_from_rclone: true
+verify_download_link: true
