@@ -78,7 +78,7 @@ services:
     image: postgres:17-alpine
     hostname: ups-database
     container_name: ups-database
-    restart: unless_stopped
+    restart: unless-stopped
     environment:
       TZ: ${TIMEZONE}
       PGDATA: ${PG_DATA}
