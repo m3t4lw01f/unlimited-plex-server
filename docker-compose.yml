@@ -6,6 +6,7 @@ services:
     container_name: ups-overseerr
     restart: unless-stopped
     environment:
+      TZ: ${TZ}
       PORT: ${OVERSEERR_PORT}
     ports:
       - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
@@ -18,6 +19,7 @@ services:
     container_name: ups-riven-frontend
     restart: unless-stopped
     environment:
+      TZ: ${TZ}
       ORIGIN: ${RIVEN_ORIGIN} #Remove if behind reverse proxy
     ports:
       - ${RIVEN_PORT}:3000
@@ -34,6 +36,7 @@ services:
     container_name: ups-riven-backend
     restart: unless-stopped
     environment:
+      TZ: ${TZ}
       RIVEN_FORCE_ENV: true
       RIVEN_SYMLINK_RCLONE_PATH: ${ROOT_PATH}/${RCLONE_MNT}/__all__
       RIVEN_SYMLINK_LIBRARY_PATH: ${ROOT_PATH}/${LIBRARY_MNT}
@@ -69,6 +72,7 @@ services:
     container_name: ups-database
     restart: unless-stopped
     environment:
+      TZ: ${TZ}
       PGDATA: ${PG_DATA}
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
@@ -87,6 +91,7 @@ services:
     container_name: ups-zurg
     restart: unless-stopped
     environment:
+      TZ: ${TZ}
       LOG_LEVEL: INFO
     volumes:
       - ./zurg-config.yml:/app/config.yml
@@ -103,6 +108,8 @@ services:
     hostname: ups-rclone
     container_name: ups-rclone
     restart: unless-stopped
+    environment:
+      TZ: ${TZ}
     volumes:
       - ${ROOT_PATH}/${RCLONE_MNT}:/data:rshared
       - ./rclone.conf:/config/rclone/rclone.conf
@@ -130,6 +137,7 @@ services:
     container_name: ups-zilean
     restart: unless-stopped
     environment:
+      TZ: ${TZ}
       Zilean__Database__ConnectionString: Host=${PG_HOST};Port=5432;Database=${ZILEAN_DB};Username=${PG_USER};Password=${PG_PASSWORD}
     volumes:
       - zilean:/app/data
@@ -149,6 +157,7 @@ services:
     container_name: ups-plex
     restart: unless-stopped
     environment:
+      TZ: ${TZ}
       PLEX_CLAIM: ${PLEX_CLAIM_TOKEN}
       PLEX_UID: ${USER_ID}
       PLEX_GID: ${GROUP_ID}
