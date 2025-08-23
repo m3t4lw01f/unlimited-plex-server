@@ -47,7 +47,7 @@ services:
       RIVEN_SCRAPING_ZILEAN_URL: http://ups-zilean:8181
     volumes:
       - backend:/riven/data
-      - /mnt:/mnt
+      - ${ROOT_PATH}:${ROOT_PATH}
     depends_on:
       ups-plex:
         condition: service_started
@@ -156,7 +156,7 @@ services:
     volumes:
       - plex:/config
       - /dev/shm:/transcode
-      - /mnt:/mnt:ro
+      - ${ROOT_PATH}:${ROOT_PATH}:ro
     devices:
       - /dev/dri:/dev/dri #For hardware acceleration
     depends_on:
