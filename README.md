@@ -82,8 +82,8 @@ The Plex server should automatically appear in your account in their [web app](h
   - Click the checkbox next to Separate Anime Dirs if you created the `#OPTIONAL` Plex libraries for anime above
   - Hit save
 - Navigate to the Content tab and
-  - Click the checkbox next to Overseerr
-  - The URL should be pre-filled, just paste `OVERSEERR_API_KEY` into the Overseerr API Key box
+  - Overseerr should be selected already and the URL should be pre-filled
+  - Paste `OVERSEERR_API_KEY` into the Overseerr API Key box
   - Make sure the checkbox next to Overseerr Use Webhook is checked
   - Hit save
 
