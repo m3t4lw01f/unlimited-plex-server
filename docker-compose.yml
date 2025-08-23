@@ -14,7 +14,7 @@ services:
     ports:
       - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
     volumes:
-      - overseerr:/app/config
+      - ./config-overseerr:/app/config
   
   ups-riven-frontend:
     image: spoked/riven-frontend:latest
@@ -31,7 +31,7 @@ services:
     ports:
       - ${RIVEN_PORT}:3000
     volumes:
-      - frontend:/riven/config
+      - ./config-riven-frontend:/riven/config
     depends_on:
       ups-riven-backend:
         condition: service_healthy
@@ -58,8 +58,7 @@ services:
       RIVEN_SCRAPING_ZILEAN_ENABLED: true
       RIVEN_SCRAPING_ZILEAN_URL: http://zilean:8181
     volumes:
-      - backend:/riven/data
-      - ./backend.json:/riven/data/settings.json
+      - ./config-riven-backend:/riven/data
       - /mnt:/mnt
     depends_on:
       ups-plex:
@@ -87,7 +86,7 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${RIVEN_DB}
     volumes:
-      - database:/var/lib/postgresql/data/pgdata
+      - ./config-database:/var/lib/postgresql/data/pgdata
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${PG_USER}"]
       interval: 10s
@@ -108,7 +107,7 @@ services:
       LOG_LEVEL: INFO
     volumes:
       - ./zurg-config.yml:/app/config.yml
-      - zurg:/app/data
+      - ./config-zurg:/app/data
     healthcheck:
       test: curl -f localhost:9999/dav/version.txt || exit 1
       interval: 10s
@@ -150,8 +149,8 @@ services:
 
   ups-zilean:
     image: ipromknight/zilean:latest
-    hostname: ups-zilean
-    container_name: ups-zilean
+    hostname: zilean
+    container_name: zilean
     restart: unless-stopped
     environment:
       UID: ${USER_ID}
@@ -161,8 +160,8 @@ services:
       TZ: ${TIMEZONE}
       Zilean__Database__ConnectionString: Host=${PG_HOST};Port=5432;Database=${ZILEAN_DB};Username=${PG_USER};Password=${PG_PASSWORD}
     volumes:
-      - zilean:/app/data
-      - zilean-tmp:/tmp
+      - ./config-zilean:/app/data
+      - ./config-zilean-tmp:/tmp
     depends_on:
       ups-database:
         condition: service_healthy
@@ -187,9 +186,9 @@ services:
       PLEX_UID: ${USER_ID}
       PLEX_GID: ${GROUP_ID}
     ports:
-      - 32400:32400/tcp
+      - ${PLEX_PORT}:32400/tcp
     volumes:
-      - plex:/config
+      - ./config-plex:/config
       - /dev/shm:/transcode
       - /mnt:/mnt:ro
     devices:
@@ -198,13 +197,3 @@ services:
       ups-rclone:
         condition: service_healthy
         restart: true
-
-volumes:
-  overseerr:
-  frontend:
-  backend:
-  database:
-  zurg:
-  zilean:
-  zilean-tmp:
-  plex:
