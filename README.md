@@ -29,6 +29,9 @@ Requirements:
 - A [github](https://github.com) account
 - A [Personal Classic Access Token](https://github.com/settings/tokens) with `read:packages` permission we'll call `PERSONAL_ACCESS_TOKEN`
 - Login to ghcr using the token: `docker login ghcr.io -u username -p PERSONAL_ACCESS_TOKEN`
+- We are using v0.9.3-final currently
+  - later versions are for donators only, and v0.10+ the configuration file is different
+  - project will be updated once v0.10 is public
   
 ## Required configuration
 - rclone uses FUSE to do its thing, so install it from your package manager
