@@ -84,7 +84,7 @@ The Plex server should automatically appear in your account in their [web app](h
 - Navigate to the Content tab and
   - Click the checkbox next to Overseerr
   - The URL should be pre-filled, just paste `OVERSEERR_API_KEY` into the Overseerr API Key box
-  - Check the checkbox next to Overseerr Use Webhook
+  - Make sure the checkbox next to Overseerr Use Webhook is checked
   - Hit save
 
 ## Make a request
