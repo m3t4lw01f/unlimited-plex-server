@@ -3,7 +3,7 @@ A Docker Compose configuration for an unlimited plex server with decent defaults
 
 ## Assumptions
 - You're running this on a local Linux machine with a GUI
-- You already have a working docker compose environment
+- You already have a working docker compose environment with your user able to run docker (your user is in the docker group)
 - You are familiar with the linux command line, environment variables, etc
 - You have a premium [real-debrid](https://real-debrid.com) subscription
 - You have a [Plex](https://plex.tv) account
