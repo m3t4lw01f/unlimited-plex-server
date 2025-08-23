@@ -65,9 +65,10 @@ In the folder you cloned the repo to run `docker compose up -d`
 - Get your `RIVEN_API_KEY`:
   - run `docker exec ups-riven-backend sh -c "grep -m 1 '\"api_key\"' /riven/data/settings.json | cut -d '\"' -f 4"`
   - The output will be a long string of characters
-- In your browser head over to [Overseerr](http://localhost:5055), log in using your Plex account and head to the settings
-- Connect to your Plex account on the "Plex" tab
-- Navigate to the Notifications tab and select `webhooks`
+- In your browser head over to [Overseerr](http://localhost:5055), log in using your Plex account
+- Connect to your Plex account during the initial configuration
+- Skip the Radarr and Sonarr configuration, since we don't need it
+- Go to settings and navigate to the Notifications tab and select webhooks
   - Set the Webhook URL to `http://ups-riven-backend:8080/api/v1/webhook/overseerr`
   - Set Authorization Header to `Bearer RIVEN_API_KEY`
   - Check the boxes for `Request Automatically Approved` and `Request Approved`
@@ -81,7 +82,7 @@ In the folder you cloned the repo to run `docker compose up -d`
 - Click on settings and then General
   - Click the checkbox next to Separate Anime Dirs if you created the `#OPTIONAL` Plex libraries for anime above
   - Hit save
-- Navigate to the Content tab and
+- Navigate to the Content tab
   - Overseerr should be selected already and the URL should be pre-filled
   - Paste `OVERSEERR_API_KEY` into the Overseerr API Key box
   - Make sure the checkbox next to Overseerr Use Webhook is checked
