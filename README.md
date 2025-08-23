@@ -39,10 +39,9 @@ Requirements:
   - This will output something like `uid=1000(username) gid=1000(groupname)`
   - Set `USER_ID` and `GROUP_ID` in `.env` to the numbers seen in the output (in this case `1000` for both)
   - Use these IDs in the `chown` command in the next step
-- create required folders:
+- create required folders (If you change `ROOT_PATH`, `RCLONE_MNT` or `LIBRARY_MNT` in `.env` use those here instead):
   - rclone: `sudo mkdir /mnt/zurg` and `sudo chown 1000:1000 /mnt/zurg`
   - library: `sudo mkdir /mnt/library` and `sudo chown 1000:1000 /mnt/library`
-  - These match `RCLONE_MNT` and `LIBRARY_MNT` in `.env` so if you create them in a different path don't forget to change them in `.env`. If you want them outside of /mnt also change `ROOT_PATH` in `.env` as well.
 - Get your [real-debrid API private token](https://real-debrid.com/devices) and set `REAL_DEBRID` in `.env` and `token: ` at the top of `zurg-config.yml`
 - Get a [Plex claim token](https://account.plex.tv/claim) and set `PLEX_CLAIM_TOKEN` in `.env`
   - This token is only good for a few minutes, so be quick with the next step
