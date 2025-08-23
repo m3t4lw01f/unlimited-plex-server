@@ -62,7 +62,9 @@ The Plex server should automatically appear in your account in their [web app](h
   - Plex thumbnail generation, chapter image generation, ad markers, intro markers, credit markers and voice activity can cause Plex to pull a LOT of data from real-debrid. It is recommended to not enable these if you are going to add a lot of content all at once.
 
 ## Configure Overseerr
-- On the file system, open `./config-riven-backend/settings.json` and find `"api_key":`. It'll be a long string of characters in quotation marks. This is your `RIVEN_API_KEY` used below.
+- Get your `RIVEN_API_KEY':
+  - run `docker exec ups-riven-backend sh -c "grep -m 1 '\"api_key\"' /riven/data/settings.json | cut -d '\"' -f 4"`
+  - The output will be a long string of characters
 - In your browser head over to [Overseerr](http://localhost:5055), log in using your Plex account and head to the settings
 - Connect to your Plex account on the "Plex" tab
 - Navigate to the Notifications tab and select `webhooks`
