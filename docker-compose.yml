@@ -149,8 +149,8 @@ services:
 
   ups-zilean:
     image: ipromknight/zilean:latest
-    hostname: zilean
-    container_name: zilean
+    hostname: ups-zilean
+    container_name: ups-zilean
     restart: unless-stopped
     environment:
       UID: ${USER_ID}
