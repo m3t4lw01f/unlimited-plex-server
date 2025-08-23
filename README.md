@@ -21,8 +21,15 @@ A Docker Compose configuration for an unlimited plex server with decent defaults
 - FUSE - Filesystem in User Space
 
 ## Step one
-- Clone this repo somewhere handy
+Clone this repo somewhere handy `git clone https://github.com/m3t4lw01f/unlimited-plex-server`
 
+## Step two
+Zurg's docker image is in a private repository, so it requires some legwork to be able to obtain.\
+Requirements:
+- A [github](https://github.com) account
+- A [Personal Classic Access Token](https://github.com/settings/tokens) with `read:packages` permission we'll call `PERSONAL_ACCESS_TOKEN`
+- Login to ghcr using the token: `docker login ghcr.io -u username -p PERSONAL_ACCESS_TOKEN`
+  
 ## Required configuration
 - rclone uses FUSE to do its thing, so install it from your package manager
   - On Ubuntu: `sudo apt install fuse`
