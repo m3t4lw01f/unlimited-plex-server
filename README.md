@@ -69,7 +69,7 @@ In the folder you cloned the repo to run `docker compose up -d`
   - run `docker exec ups-riven-backend sh -c "grep -m 1 '\"api_key\"' /riven/data/settings.json | cut -d '\"' -f 4"`
   - The output will be a long string of characters
 - In your browser head over to [Overseerr](http://localhost:5055), log in using your Plex account
-- Connect to your Plex account during the initial configuration
+- Connect to your Plex server during the initial configuration
 - Skip the Radarr and Sonarr configuration, since we don't need it
 - Go to settings and navigate to the Notifications tab and select webhooks
   - Set the Webhook URL to `http://ups-riven-backend:8080/api/v1/webhook/overseerr`
