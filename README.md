@@ -50,11 +50,12 @@ Requirements:
 In the folder you cloned the repo to run `docker compose up -d`
 
 ## Configure Plex
-The Plex server should automatically appear in your account in their [web app](https://app.plex.tv). Configure two (or four) libraries:
-- Movies at `/mnt/library/movies`
-- TV Shows at `/mnt/library/shows`
-- `#OPTIONAL` Anime Movies at `/mnt/library/anime_movies`
-- `#OPTIONAL` Anime TV at `/mnt/library/anime_shows`
+- Make sure `PLEX_PORT` from `.env` is forwarded to your server and you have set a `PLEX_CLAIM_TOKEN` in `.env` so that when Plex starts it is automaically claimed by your account, and publicly accessible in their [web app](https://app.plex.tv). 
+- Configure two (or four) libraries:
+  - Movies at `/mnt/library/movies`
+  - TV Shows at `/mnt/library/shows`
+  - `#OPTIONAL` Anime Movies at `/mnt/library/anime_movies`
+  - `#OPTIONAL` Anime TV at `/mnt/library/anime_shows`
 - In Plex settings for the server, on the transcode menu item, set 'Transcoder temporary directory' to `/transcode`
 - If you have plex pass, enable hardware acceleration
 - Special notes:
