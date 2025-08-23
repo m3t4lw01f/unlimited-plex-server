@@ -14,7 +14,7 @@ services:
     ports:
       - ${OVERSEERR_PORT}:${OVERSEERR_PORT}
     volumes:
-      - ./config-overseerr:/app/config
+      - overseerr:/app/config
   
   ups-riven-frontend:
     image: spoked/riven-frontend:latest
@@ -31,7 +31,7 @@ services:
     ports:
       - ${RIVEN_PORT}:3000
     volumes:
-      - ./config-riven-frontend:/riven/config
+      - frontend:/riven/config
     depends_on:
       ups-riven-backend:
         condition: service_healthy
@@ -58,7 +58,8 @@ services:
       RIVEN_SCRAPING_ZILEAN_ENABLED: true
       RIVEN_SCRAPING_ZILEAN_URL: http://zilean:8181
     volumes:
-      - ./config-riven-backend:/riven/data
+      - backend:/riven/data
+      - ./backend.json:/riven/data/settings.json
       - /mnt:/mnt
     depends_on:
       ups-plex:
@@ -86,7 +87,7 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${RIVEN_DB}
     volumes:
-      - ./config-database:/var/lib/postgresql/data/pgdata
+      - database:/var/lib/postgresql/data/pgdata
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${PG_USER}"]
       interval: 10s
@@ -107,7 +108,7 @@ services:
       LOG_LEVEL: INFO
     volumes:
       - ./zurg-config.yml:/app/config.yml
-      - ./config-zurg:/app/data
+      - zurg:/app/data
     healthcheck:
       test: curl -f localhost:9999/dav/version.txt || exit 1
       interval: 10s
@@ -160,8 +161,8 @@ services:
       TZ: ${TIMEZONE}
       Zilean__Database__ConnectionString: Host=${PG_HOST};Port=5432;Database=${ZILEAN_DB};Username=${PG_USER};Password=${PG_PASSWORD}
     volumes:
-      - ./config-zilean:/app/data
-      - ./config-zilean-tmp:/tmp
+      - zilean:/app/data
+      - zilean-tmp:/tmp
     depends_on:
       ups-database:
         condition: service_healthy
@@ -188,7 +189,7 @@ services:
     ports:
       - 32400:32400/tcp
     volumes:
-      - ./config-plex:/config
+      - plex:/config
       - /dev/shm:/transcode
       - /mnt:/mnt:ro
     devices:
@@ -198,3 +199,12 @@ services:
         condition: service_healthy
         restart: true
 
+volumes:
+  overseerr:
+  frontend:
+  backend:
+  database:
+  zurg:
+  zilean:
+  zilean-tmp:
+  plex:
