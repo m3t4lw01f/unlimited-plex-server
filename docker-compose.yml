@@ -43,7 +43,7 @@ services:
       RIVEN_SCRAPING_ZILEAN_ENABLED: true
       RIVEN_SCRAPING_ZILEAN_URL: http://ups-zilean:8181
     volumes:
-      - ./config-riven-backend:/riven/data
+      - backend:/riven/data
       - /mnt:/mnt
     depends_on:
       ups-plex:
@@ -164,6 +164,7 @@ services:
 volumes:
   overseerr:
   frontend:
+  backend:
   database:
   zurg:
   zilean:
