@@ -85,6 +85,11 @@ In the folder you cloned the repo to run `docker compose up -d`
 - Click on settings and then General
   - Click the checkbox next to Separate Anime Dirs if you created the `#OPTIONAL` Plex libraries for anime above
   - Hit save
+- Navigate to the Media Server tab
+  - Click the check box next to Plex Update
+  - Enter http://ups-plex:32400 as the URL
+  - Use the button next to Plex Token to log in to your plex account and get a token
+  - Hit save
 - Navigate to the Content tab
   - Overseerr should be selected already and the URL should be pre-filled
   - Paste `OVERSEERR_API_KEY` into the Overseerr API Key box
