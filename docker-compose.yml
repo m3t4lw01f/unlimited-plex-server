@@ -56,7 +56,7 @@ services:
       RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY: ${REAL_DEBRID}
       RIVEN_SCRAPING_TORRENTIO_ENABLED: true
       RIVEN_SCRAPING_ZILEAN_ENABLED: true
-      RIVEN_SCRAPING_ZILEAN_URL: http://zilean:8181
+      RIVEN_SCRAPING_ZILEAN_URL: http://ups-zilean:8181
     volumes:
       - ./config-riven-backend:/riven/data
       - /mnt:/mnt
