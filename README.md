@@ -42,7 +42,7 @@ Requirements:
 - create required folders:
   - rclone: `sudo mkdir /mnt/zurg` and `sudo chown 1000:1000 /mnt/zurg`
   - library: `sudo mkdir /mnt/library` and `sudo chown 1000:1000 /mnt/library`
-  - These match `RCLONE_MNT` and `LIBRARY_MNT` in `.env` so if you create them in a different path don't forget to change them in `.env`
+  - These match `RCLONE_MNT` and `LIBRARY_MNT` in `.env` so if you create them in a different path don't forget to change them in `.env`. Everything relies on these paths being under /mnt, and using a path outside of /mnt is outside the scope of this project.
 - Get your [real-debrid API private token](https://real-debrid.com/devices) and set `REAL_DEBRID` in `.env` and `token: ` at the top of `zurg-config.yml`
 - Get a [Plex claim token](https://account.plex.tv/claim) and set `PLEX_CLAIM_TOKEN` in `.env`
   - This token is only good for a few minutes, so be quick with the next step
@@ -89,12 +89,3 @@ The Plex server should automatically appear in your account in their [web app](h
 
 ## Make a request
 Back in [Overseerr](http://localhost:5055), search for something and when your results come back, click the little "Request" button on the thumbnail. It will use the webhook to send the request to Riven, Riven will use Zilean or TorrentIO as the source and if it finds an available release, it will add it to your real-debrid account. Once added to your real-debrid account, it will show up in the rclone webdav mount at `/mnt/zurg/__all__`, Riven will symlink that to `/mnt/library` in the appropriate subfolder and Plex will pick it up and scan it into your library.
-
-## Troubleshooting
-### Zilean
-Zilean may require you to manually create the database. You can check Zilean's logs `docker logs zilean` and if it has failed to start run the following:\
-`docker exec -it ups-database createdb -U postgres -W zilean`\
-Make sure ups-database matches the container name (it will by default if you didn't change it in the docker-compose.yml) and the user (after -U) and database (after -W) match `PG_USER` and `ZILEAN_DB` in the `/env`. It will ask for the password. Use the same one set in `.env` as `PG_PASSWORD`
-
-### I need more releases
-To add more scrapers, simply head to the [Riven Settings for Scrapers](http://localhost:3000/settings/scrapers). This is useful if Zilean and TorrentIO are not providing what you want.
