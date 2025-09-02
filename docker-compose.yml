@@ -122,7 +122,7 @@ services:
     <<: *rclone
     volumes:
       - ./rclone.conf:/config/rclone/rclone.conf
-      - /mnt/downloads/nzbdav:/data:rshared
+      - /mnt/nzbdav:/data:rshared
     command: "mount ${NZBDAV_REMOTE}: /data ${NZBDAV_MOUNT_OPTS}"
     depends_on:
       nzbdav:
