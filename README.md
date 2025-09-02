@@ -27,6 +27,8 @@ Clone this repo somewhere handy `git clone https://github.com/m3t4lw01f/unlimite
   - `sudo mkdir /mnt/tordav && sudo chown 1000:1000 /mnt/tordav` where decypharr's built in rclone will mount its remotes
   - `sudo mkdir /mnt/nzbdav && sudo chown 1000:1000 /mnt/nzbdav` where nzbdav-rclone will mount nzbdav's webdav server
   - `sudo mkdir /mnt/library && sudo chown 1000:1000 /mnt/library` where Plex will look for media, and the Sonarr/Radarr root folder
+    - `mkdir /mnt/library/movies`
+    - `mkdir /mnt/library/tv`
 - For Plex
   - Ensure `PLEX_PORT` in `.env` is open on your router/firewall so that Plex is externally accessible
   - Get a [Plex claim token](https://account.plex.tv/claim) and set `PLEX_CLAIM_TOKEN` in `.env`
@@ -86,6 +88,7 @@ In the folder you cloned the repo to run `docker compose up -d`
 ## Configure Sonarr and Radarr
 - Head to localhost:8989 (Sonarr) or localhost:7878 (Radarr)
   - These steps are the same for both tools, so set them up the same way
+- In the media management settings make sure `use hardlinks instead of copy` is enabled
 - In the settings, click on 'indexers'
   - Configure as many indexers as you want, for both torrents and usenet
   - You can use an indexer proxy like Prowlarr to make this easier
@@ -108,4 +111,4 @@ In the folder you cloned the repo to run `docker compose up -d`
     - Scroll down and hit test. Then save.
    
 ## Add a movie, or a show
-- Add a movie to Radarr or a show to Sonarr and set the root path to `/mnt/library/movie` or `/mnt/library/tv`.
+- Add a movie to Radarr or a show to Sonarr and set the root path to `/mnt/library/movies` or `/mnt/library/tv`.
