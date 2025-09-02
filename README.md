@@ -7,7 +7,7 @@ A minimal docker compose configuration for an unlimited plex server using debrid
   - Below, where you see localhost, replace this with the hostname or IP of your server if not working on the same machine
 - You already have a working docker compose environment with your user able to run docker (your user is in the docker group)
 - You are familiar with the linux command line, environment variables, etc
-- You have a premium debred service
+- You have a premium debrid service
 - You have a premium usenet account (unlimited preferred)
 - You have a [Plex](https://plex.tv) account
 
