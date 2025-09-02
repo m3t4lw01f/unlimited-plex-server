@@ -45,6 +45,8 @@ services:
   overseerr:
     image: sctx/overseerr:latest
     <<: *common
+    ports:
+      - ${PORT_OVERSEERR}:${PORT_OVERSEERR}
     environment:
       PORT: ${PORT_OVERSEERR}
     volumes:
