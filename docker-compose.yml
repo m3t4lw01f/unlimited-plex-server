@@ -1,0 +1,194 @@
+# Config common to most containers
+x-common-config: &common
+  environment:
+    TZ: ${TZ}
+    PUID: ${USER_ID}
+    PGID: ${GROUP_ID}
+  restart: unless-stopped
+
+# Config common to rclone containers
+x-rclone-common-config: &rclone
+  image: rclone/rclone:latest
+  environment:
+    TZ: ${TZ}
+  restart: unless-stopped
+  cap_add:
+    - SYS_ADMIN
+  security_opt:
+    - apparmor:unconfined
+  devices:
+    - /dev/fuse:/dev/fuse:rwm
+  healthcheck:
+    # Marks the container as healthy once the mount is working
+    test: ["CMD-SHELL", "find /data -mindepth 1 -maxdepth 1 -print | grep -q ."]
+    interval: 10s
+    timeout: 10s
+    retries: 2
+    start_period: 10s
+  networks:
+    - default
+
+# Config for containers that depend on all the mounts
+x-container-depends-mounts: &mounts
+  depends_on:
+    # Decypharr mounts its own rclone for the debrid webdav
+    tordav:
+      condition: service_healthy
+      restart: true
+    # This is the rclone mount of the nzbdav webdav
+    rclone-nzbdav:
+      condition: service_healthy
+      restart: true
+
+services:
+  # Overseerr - a powerful request system
+  overseerr:
+    image: sctx/overseerr:latest
+    <<: *common
+    environment:
+      PORT: ${PORT_OVERSEERR}
+    volumes:
+      - overseerr:/app/config
+    labels:
+      caddy: ${DOMAIN_OVERSEERR}
+      caddy.reverse_proxy: "{{upstreams ${PORT_OVERSEERR}}}"
+    networks:
+      - default
+      - proxy
+
+  # Plex - The Media Server
+  plex:
+    image: plexinc/pms-docker:${PLEX_TYPE}
+    <<: [*common, *mounts]
+    environment:
+      PLEX_CLAIM: ${PLEX_CLAIM_TOKEN}
+      PLEX_UID: ${USER_ID}
+      PLEX_GID: ${GROUP_ID}
+    ports:
+      - ${PORT_PLEX}:${PORT_PLEX}/tcp
+    volumes:
+      - plex:/config
+      - /dev/shm:/transcode
+      - ${MNT_PATH_READONLY}
+    devices:
+      - /dev/dri:/dev/dri
+    labels:
+      caddy: ${DOMAIN_PLEX}
+      caddy.reverse_proxy: "{{upstreams ${PORT_PLEX}}}"
+    networks:
+      - default
+      - proxy
+
+  # Radarr - Movie library management
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    <<: [*common, *mounts]
+    volumes:
+      - radarr:/config
+      - ${MNT_PATH_SHARED}
+    labels:
+      caddy: ${DOMAIN_RADARR}
+      caddy.reverse_proxy: "{{upstreams ${PORT_RADARR}}}"
+    networks:
+      - default
+      - proxy
+
+  # Sonarr - TV library management
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    <<: [*common, *mounts]
+    volumes:
+      - sonarr:/config
+      - ${MNT_PATH_SHARED}
+    labels:
+      caddy: ${DOMAIN_SONARR}
+      caddy.reverse_proxy: "{{upstreams ${PORT_SONARR}}}"
+    networks:
+      - default
+      - proxy
+
+  # Prowlarr - torrent/usenet indexer aggregator
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    <<: *common
+    volumes:
+      - prowlarr:/config
+    labels:
+      caddy: ${DOMAIN_PROWLARR}
+      caddy.reverse_proxy: "{{upstreams ${PORT_PROWLARR}}}"
+    networks:
+      - default
+      - proxy
+
+  # FlareSolverr - automatically solve cloudflare captchas
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    <<: *common
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+      LOG_HTML: ${LOG_HTML:-false}
+      CAPTCHA_SOLVER: ${CAPTCHA_SOLVER:-none}
+      LANG: en_CA
+    networks:
+      - default
+
+  # Decypharr - mount debrid services as drives via rclone and webdav
+  tordav:
+    image: cy01/blackhole:beta
+    <<: *common
+    volumes:
+      - decypharr:/app
+      - ${MNT_PATH_SHARED}
+    devices:
+      - /dev/fuse:/dev/fuse:rwm
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    healthcheck:
+      test: ["CMD", "/usr/bin/healthcheck", "--config", "/app/"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    labels:
+      caddy: ${DOMAIN_TORDAV}
+      caddy.reverse_proxy: "{{upstreams ${PORT_TORDAV}}}"
+      
+  # NzbDAV - provides a webdav server of usenet content downloaded from NZB files
+  nzbdav:
+    image: ghcr.io/nzbdav-dev/nzbdav:issue-58
+    <<: *common
+    volumes:
+      - nzbdav:/config
+    labels:
+      caddy: ${DOMAIN_NZBDAV}
+      caddy.reverse_proxy: "{{upstreams ${PORT_NZBDAV}}}"
+    networks:
+      - default
+      - proxy
+
+  # rclone - mount cloud as file system
+  rclone-nzbdav:
+    <<: *rclone
+    volumes:
+      - ./rclone.conf:/config/rclone/rclone.conf
+      - /mnt/downloads/nzbdav:/data:rshared
+    command: "mount ${NZBDAV_REMOTE}: /data ${NZBDAV_MOUNT_OPTS}"
+    depends_on:
+      nzbdav:
+        condition: service_started
+        restart: true
+
+volumes:
+  overseerr:
+  plex:
+  prowlarr:
+  sonarr:
+  radarr:
+  tordav:
+  nzbdav:
+
+networks:
+  default:
+  proxy:
+    external: true
