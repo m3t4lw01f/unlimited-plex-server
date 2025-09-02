@@ -49,12 +49,6 @@ services:
       PORT: ${PORT_OVERSEERR}
     volumes:
       - overseerr:/app/config
-    labels:
-      caddy: ${DOMAIN_OVERSEERR}
-      caddy.reverse_proxy: "{{upstreams ${PORT_OVERSEERR}}}"
-    networks:
-      - default
-      - proxy
 
   # Plex - The Media Server
   plex:
@@ -72,45 +66,33 @@ services:
       - ${MNT_PATH_READONLY}
     devices:
       - /dev/dri:/dev/dri
-    labels:
-      caddy: ${DOMAIN_PLEX}
-      caddy.reverse_proxy: "{{upstreams ${PORT_PLEX}}}"
-    networks:
-      - default
-      - proxy
 
   # Radarr - Movie library management
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     <<: [*common, *mounts]
+    ports:
+      - ${PORT_RADARR}:${PORT_RADARR}
     volumes:
       - radarr:/config
       - ${MNT_PATH_SHARED}
-    labels:
-      caddy: ${DOMAIN_RADARR}
-      caddy.reverse_proxy: "{{upstreams ${PORT_RADARR}}}"
-    networks:
-      - default
-      - proxy
 
   # Sonarr - TV library management
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     <<: [*common, *mounts]
+    ports:
+      - ${PORT_SONARR}:${PORT_SONARR}
     volumes:
       - sonarr:/config
       - ${MNT_PATH_SHARED}
-    labels:
-      caddy: ${DOMAIN_SONARR}
-      caddy.reverse_proxy: "{{upstreams ${PORT_SONARR}}}"
-    networks:
-      - default
-      - proxy
 
   # Decypharr - mount debrid services as drives via rclone and webdav
   tordav:
     image: cy01/blackhole:beta
     <<: *common
+    ports:
+      - ${PORT_TORDAV}:${PORT_TORDAV}
     volumes:
       - decypharr:/app
       - ${MNT_PATH_SHARED}
@@ -125,22 +107,15 @@ services:
       interval: 10s
       timeout: 10s
       retries: 3
-    labels:
-      caddy: ${DOMAIN_TORDAV}
-      caddy.reverse_proxy: "{{upstreams ${PORT_TORDAV}}}"
       
   # NzbDAV - provides a webdav server of usenet content downloaded from NZB files
   nzbdav:
     image: ghcr.io/nzbdav-dev/nzbdav:issue-58
     <<: *common
+    ports:
+      - ${PORT_NZBDAV}:${PORT_NZBDAV}
     volumes:
       - nzbdav:/config
-    labels:
-      caddy: ${DOMAIN_NZBDAV}
-      caddy.reverse_proxy: "{{upstreams ${PORT_NZBDAV}}}"
-    networks:
-      - default
-      - proxy
 
   # rclone - mount cloud as file system
   rclone-nzbdav:
