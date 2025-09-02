@@ -25,8 +25,6 @@ x-rclone-common-config: &rclone
     timeout: 10s
     retries: 2
     start_period: 10s
-  networks:
-    - default
 
 # Config for containers that depend on all the mounts
 x-container-depends-mounts: &mounts
