@@ -107,31 +107,6 @@ services:
       - default
       - proxy
 
-  # Prowlarr - torrent/usenet indexer aggregator
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    <<: *common
-    volumes:
-      - prowlarr:/config
-    labels:
-      caddy: ${DOMAIN_PROWLARR}
-      caddy.reverse_proxy: "{{upstreams ${PORT_PROWLARR}}}"
-    networks:
-      - default
-      - proxy
-
-  # FlareSolverr - automatically solve cloudflare captchas
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    <<: *common
-    environment:
-      LOG_LEVEL: ${LOG_LEVEL:-debug}
-      LOG_HTML: ${LOG_HTML:-false}
-      CAPTCHA_SOLVER: ${CAPTCHA_SOLVER:-none}
-      LANG: en_CA
-    networks:
-      - default
-
   # Decypharr - mount debrid services as drives via rclone and webdav
   tordav:
     image: cy01/blackhole:beta
