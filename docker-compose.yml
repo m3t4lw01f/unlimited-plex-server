@@ -48,7 +48,7 @@ services:
       PLEX_UID: ${USER_ID}
       PLEX_GID: ${GROUP_ID}
     ports:
-      - ${PORT_PLEX}:${PORT_PLEX}/tcp
+      - ${PORT_PLEX}:32400/tcp
     volumes:
       - plex:/config
       - /dev/shm:/transcode
@@ -61,7 +61,7 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     <<: [*common, *mounts]
     ports:
-      - ${PORT_RADARR}:${PORT_RADARR}
+      - ${PORT_RADARR}:7878
     volumes:
       - radarr:/config
       - ${MNT_PATH_SHARED}
@@ -71,7 +71,7 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     <<: [*common, *mounts]
     ports:
-      - ${PORT_SONARR}:${PORT_SONARR}
+      - ${PORT_SONARR}:8989
     volumes:
       - sonarr:/config
       - ${MNT_PATH_SHARED}
@@ -81,7 +81,7 @@ services:
     image: cy01/blackhole:beta
     <<: *common
     ports:
-      - ${PORT_TORDAV}:${PORT_TORDAV}
+      - ${PORT_TORDAV}:8282
     volumes:
       - decypharr:/app
       - ${MNT_PATH_SHARED}
@@ -102,7 +102,7 @@ services:
     image: ghcr.io/nzbdav-dev/nzbdav:issue-58
     <<: *common
     ports:
-      - ${PORT_NZBDAV}:${PORT_NZBDAV}
+      - ${PORT_NZBDAV}:3000
     volumes:
       - nzbdav:/config
 
