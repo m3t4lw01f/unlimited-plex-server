@@ -40,7 +40,7 @@ In the folder you cloned the repo to run `docker compose up -d`
 - Head over to Plex's [web app](https://app.plex.tv). 
 - Configure two libraries:
   - Movies at `/mnt/library/movies`
-  - TV Shows at `/mnt/library/shows`
+  - TV Shows at `/mnt/library/tv`
 - In Plex settings for the server, on the transcode menu item, set 'Transcoder temporary directory' to `/transcode`
 - If you have plex pass, enable hardware acceleration
 - Special notes:
@@ -60,7 +60,7 @@ In the folder you cloned the repo to run `docker compose up -d`
     - Click save
   - Click WebDAV
     - enter the username that matches what you entered in `rclone.conf`
-    - enter the _original_ password, NOT the obfuscated one, from `rclone.conf`na
+    - enter the _original_ password, NOT the obfuscated one, from `rclone.conf`
     - click save
 
 # Configure Decypharr
