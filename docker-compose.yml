@@ -39,17 +39,6 @@ x-container-depends-mounts: &mounts
       restart: true
 
 services:
-  # Overseerr - a powerful request system
-  overseerr:
-    image: sctx/overseerr:latest
-    <<: *common
-    ports:
-      - ${PORT_OVERSEERR}:${PORT_OVERSEERR}
-    environment:
-      PORT: ${PORT_OVERSEERR}
-    volumes:
-      - overseerr:/app/config
-
   # Plex - The Media Server
   plex:
     image: plexinc/pms-docker:${PLEX_TYPE}
@@ -130,9 +119,7 @@ services:
         restart: true
 
 volumes:
-  overseerr:
   plex:
-  prowlarr:
   sonarr:
   radarr:
   tordav:
