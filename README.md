@@ -73,6 +73,9 @@ In the folder you cloned the repo to run `docker compose up -d`
   - Check the `Enable webdav` checkbox
   - RC Refresh Directories: `__all__`
   - Save Configuration
+- On the download tab
+  - set the download path to `/mnt/tordav`
+  - Save Configuration
 - On the rclone tab, configure the following:
   - Global mount path: `/mnt/tordav`
   - User ID and Group ID: `1000` (Or same as above from the id command)
