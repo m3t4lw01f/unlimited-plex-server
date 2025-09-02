@@ -33,7 +33,8 @@ Clone this repo somewhere handy `git clone https://github.com/m3t4lw01f/unlimite
   - Ensure `PORT_PLEX` in `.env` is open on your router/firewall so that Plex is externally accessible
   - Get a [Plex claim token](https://account.plex.tv/claim) and set `PLEX_CLAIM_TOKEN` in `.env`
     - This token is only good for a few minutes, so be quick with the next step
-  - The above is required so that when Plex starts, it automatically signs into your account and is available via Plex's [web app](https://app.plex.tv).
+    - This is required so that when Plex starts, it automatically signs into your account and is available via Plex's [web app](https://app.plex.tv).
+    - If you do not do this, you'll have to access plex at http://localhost:32400/web instead, and then sign it into your account manually
 
 ## Get things running
 In the folder you cloned the repo to run `docker compose up -d`
