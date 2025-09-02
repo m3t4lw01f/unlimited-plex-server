@@ -99,7 +99,7 @@ services:
       
   # NzbDAV - provides a webdav server of usenet content downloaded from NZB files
   nzbdav:
-    image: ghcr.io/nzbdav-dev/nzbdav:issue-58
+    image: ghcr.io/nzbdav-dev/nzbdav:alpha
     <<: *common
     ports:
       - ${PORT_NZBDAV}:3000
